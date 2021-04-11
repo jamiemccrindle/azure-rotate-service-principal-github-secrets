@@ -1,5 +1,8 @@
 name: rotate
 
+on:
+  workflow_dispatch: 
+
 jobs:
 
   build-and-deploy:
