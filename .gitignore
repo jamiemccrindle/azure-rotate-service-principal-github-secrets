@@ -2,3 +2,5 @@
 .terraform.lock.hcl
 .env
 terraform.tfstate*
+config
+*.tfvars
