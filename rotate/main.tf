@@ -36,8 +36,8 @@ resource "random_password" "odd" {
   keepers = {
     "date" = local.odd_keeper
   }
-  length           = 64
-  special          = true
+  length           = 36
+  special          = false
 }
 
 resource "azuread_application_password" "even" {
@@ -51,8 +51,8 @@ resource "random_password" "even" {
   keepers = {
     "date" = local.even_keeper
   }
-  length           = 64
-  special          = true
+  length           = 36
+  special          = false
 }
 
 resource "github_actions_secret" "example" {
@@ -62,7 +62,7 @@ resource "github_actions_secret" "example" {
 {
   "clientId": "${azuread_application.example.application_id}",
   "clientSecret": "${local.use_even ? random_password.even.result : random_password.odd.result}",
-  "subscriptionId": "${data.azurerm_subscription.current.id}",
+  "subscriptionId": "${data.azurerm_subscription.current.subscription_id}",
   "tenantId": "${data.azuread_client_config.current.tenant_id}",
   "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
   "resourceManagerEndpointUrl": "https://management.azure.com/",
@@ -74,4 +74,8 @@ resource "github_actions_secret" "example" {
 EOT
   
   
+}
+
+output "secret" {
+  value = github_actions_secret.example.plaintext_value
 }
