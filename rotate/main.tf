@@ -80,8 +80,6 @@ resource "github_actions_secret" "example" {
   "managementEndpointUrl": "https://management.core.windows.net/"
 }
 EOT
-
-
 }
 
 output "secret" {
