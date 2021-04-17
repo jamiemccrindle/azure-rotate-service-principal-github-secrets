@@ -25,34 +25,42 @@ resource "azurerm_role_assignment" "contributor" {
   principal_id         = azuread_service_principal.example.object_id
 }
 
+resource "random_uuid" "odd" {
+}
+
 resource "azuread_application_password" "odd" {
   application_object_id = azuread_application.example.id
-  description       = "odd"
-  value             = random_password.odd.result
-  end_date_relative = "1440h"
+  description           = "odd"
+  value                 = random_password.odd.result
+  end_date_relative     = "1440h"
+  key_id                = random_uuid.odd.result
 }
 
 resource "random_password" "odd" {
   keepers = {
     "date" = local.odd_keeper
   }
-  length           = 36
-  special          = false
+  length  = 36
+  special = false
+}
+
+resource "random_uuid" "even" {
 }
 
 resource "azuread_application_password" "even" {
   application_object_id = azuread_application.example.id
-  description       = "even"
-  value             = random_password.odd.result
-  end_date_relative = "1440h"
+  description           = "even"
+  value                 = random_password.odd.result
+  end_date_relative     = "1440h"
+  key_id                = random_uuid.even.result
 }
 
 resource "random_password" "even" {
   keepers = {
     "date" = local.even_keeper
   }
-  length           = 36
-  special          = false
+  length  = 36
+  special = false
 }
 
 resource "github_actions_secret" "example" {
@@ -72,8 +80,8 @@ resource "github_actions_secret" "example" {
   "managementEndpointUrl": "https://management.core.windows.net/"
 }
 EOT
-  
-  
+
+
 }
 
 output "secret" {
