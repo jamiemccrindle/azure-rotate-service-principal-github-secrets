@@ -50,7 +50,7 @@ resource "random_uuid" "even" {
 resource "azuread_application_password" "even" {
   application_object_id = azuread_application.example.id
   description           = "even"
-  value                 = random_password.odd.result
+  value                 = random_password.even.result
   end_date_relative     = "1440h"
   key_id                = random_uuid.even.result
 }
@@ -86,4 +86,12 @@ EOT
 
 output "secret" {
   value = github_actions_secret.example.plaintext_value
+}
+
+output "password_odd" {
+  value = random_password.odd.result
+}
+
+output "password_even" {
+  value = random_password.even.result
 }
