@@ -33,4 +33,4 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
-        GITHUB_OWNER: jamiemccrindle
+        GITHUB_OWNER: ${{ secrets.ORG_GITHUB_OWNER }}

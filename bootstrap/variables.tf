@@ -22,7 +22,7 @@ variable "org_github_token" {
   type = string
 }
 
-variable "github_owner" {
+variable "org_github_owner" {
   type = string
 }
 

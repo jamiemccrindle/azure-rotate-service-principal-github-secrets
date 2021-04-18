@@ -48,8 +48,8 @@ resource "github_actions_secret" "org_github_token" {
   plaintext_value = var.org_github_token
 }
 
-resource "github_actions_secret" "github_owner" {
+resource "github_actions_secret" "org_github_owner" {
   repository = var.repository
-  secret_name = "GITHUB_OWNER"
-  plaintext_value = var.github_owner
+  secret_name = "ORG_GITHUB_OWNER"
+  plaintext_value = var.org_github_owner
 }
