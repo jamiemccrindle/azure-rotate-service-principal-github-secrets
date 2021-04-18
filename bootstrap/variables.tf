@@ -21,3 +21,11 @@ variable "key" {
 variable "org_github_token" {
   type = string
 }
+
+variable "github_owner" {
+  type = string
+}
+
+variable "repository" {
+  type = string
+}

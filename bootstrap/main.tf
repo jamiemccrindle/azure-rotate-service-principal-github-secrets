@@ -19,31 +19,37 @@ resource "azurerm_storage_container" "terraform_state" {
 }
 
 resource "github_actions_secret" "tfstate_resource_group_name" {
-  repository = "azure-rotate-service-principal-github-secrets"
+  repository = var.repository
   secret_name = "TFSTATE_RESOURCE_GROUP_NAME"
   plaintext_value = var.resource_group_name
 }
 
 resource "github_actions_secret" "tfstate_storage_account_name" {
-  repository = "azure-rotate-service-principal-github-secrets"
+  repository = var.repository
   secret_name = "TFSTATE_STORAGE_ACCOUNT_NAME"
   plaintext_value = var.storage_account_name
 }
 
 resource "github_actions_secret" "tfstate_container_name" {
-  repository = "azure-rotate-service-principal-github-secrets"
+  repository = var.repository
   secret_name = "TFSTATE_CONTAINER_NAME"
   plaintext_value = var.container_name
 }
 
 resource "github_actions_secret" "tfstate_key" {
-  repository = "azure-rotate-service-principal-github-secrets"
+  repository = var.repository
   secret_name = "TFSTATE_KEY"
   plaintext_value = var.key
 }
 
 resource "github_actions_secret" "org_github_token" {
-  repository = "azure-rotate-service-principal-github-secrets"
+  repository = var.repository
   secret_name = "ORG_GITHUB_TOKEN"
   plaintext_value = var.org_github_token
+}
+
+resource "github_actions_secret" "github_owner" {
+  repository = var.repository
+  secret_name = "GITHUB_OWNER"
+  plaintext_value = var.github_owner
 }
