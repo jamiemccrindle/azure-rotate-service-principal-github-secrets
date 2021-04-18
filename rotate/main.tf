@@ -1,95 +1,38 @@
-locals {
-  date        = tonumber(var.date)
-  odd_keeper  = floor((local.date + 1) / 2)
-  even_keeper = floor(local.date / 2)
-  use_even    = local.date % 2 == 0
+resource "azuread_application" "terraform" {
+  display_name = "terraform"
+  required_resource_access {
+    resource_app_id = local.azure_ad.application_id
+    resource_access {
+      id   = local.azure_ad.app_roles["Application.ReadWrite.All"]
+      type = "Role"
+    }
+    resource_access {
+      id   = local.azure_ad.app_roles["Directory.ReadWrite.All"]
+      type = "Role"
+    }
+  }
 }
 
-data "azuread_client_config" "current" {
-}
-
-data "azurerm_subscription" "current" {
-}
-
-resource "azuread_application" "example" {
-  display_name = "example"
-}
-
-resource "azuread_service_principal" "example" {
-  application_id = azuread_application.example.application_id
+resource "azuread_service_principal" "terraform" {
+  application_id = azuread_application.terraform.application_id
 }
 
 resource "azurerm_role_assignment" "contributor" {
   scope                = data.azurerm_subscription.current.id
   role_definition_name = "Contributor"
-  principal_id         = azuread_service_principal.example.object_id
+  principal_id         = azuread_service_principal.terraform.object_id
 }
 
-resource "random_uuid" "odd" {
-}
-
-resource "azuread_application_password" "odd" {
-  application_object_id = azuread_application.example.id
-  description           = "odd"
-  value                 = random_password.odd.result
-  end_date_relative     = "1440h"
-  key_id                = random_uuid.odd.result
-}
-
-resource "random_password" "odd" {
-  keepers = {
-    "date" = local.odd_keeper
-  }
-  length  = 36
-  special = false
-}
-
-resource "random_uuid" "even" {
-}
-
-resource "azuread_application_password" "even" {
-  application_object_id = azuread_application.example.id
-  description           = "even"
-  value                 = random_password.even.result
-  end_date_relative     = "1440h"
-  key_id                = random_uuid.even.result
-}
-
-resource "random_password" "even" {
-  keepers = {
-    "date" = local.even_keeper
-  }
-  length  = 36
-  special = false
-}
-
-resource "github_actions_secret" "example" {
-  repository      = "azure-rotate-service-principal-github-secrets"
-  secret_name     = "AZURE_CREDENTIALS"
-  plaintext_value = <<-EOT
-{
-  "clientId": "${azuread_application.example.application_id}",
-  "clientSecret": "${local.use_even ? random_password.even.result : random_password.odd.result}",
-  "subscriptionId": "${data.azurerm_subscription.current.subscription_id}",
-  "tenantId": "${data.azuread_client_config.current.tenant_id}",
-  "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
-  "resourceManagerEndpointUrl": "https://management.azure.com/",
-  "activeDirectoryGraphResourceId": "https://graph.windows.net/",
-  "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
-  "galleryEndpointUrl": "https://gallery.azure.com/",
-  "managementEndpointUrl": "https://management.core.windows.net/"
-}
-EOT
+module "terraform_sp_secrets" {
+  source                = "./modules/azure_github_secrets"
+  subscription_id       = data.azurerm_subscription.current.subscription_id
+  tenant_id             = data.azuread_client_config.current.tenant_id
+  repository            = "azure-rotate-service-principal-github-secrets"
+  application_id        = azuread_application.terraform.application_id
+  application_object_id = azuread_application.terraform.id
+  date                  = var.date
 }
 
 output "secret" {
-  value = github_actions_secret.example.plaintext_value
-}
-
-output "password_odd" {
-  value = random_password.odd.result
-}
-
-output "password_even" {
-  value = random_password.even.result
+  value = module.terraform_sp_secrets
 }
