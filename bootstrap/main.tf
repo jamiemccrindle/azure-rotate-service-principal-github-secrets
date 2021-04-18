@@ -41,3 +41,9 @@ resource "github_actions_secret" "tfstate_key" {
   secret_name = "TFSTATE_KEY"
   plaintext_value = var.key
 }
+
+resource "github_actions_secret" "org_github_token" {
+  repository = "azure-rotate-service-principal-github-secrets"
+  secret_name = "ORG_GITHUB_TOKEN"
+  plaintext_value = var.org_github_token
+}

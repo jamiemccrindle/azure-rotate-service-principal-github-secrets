@@ -17,3 +17,7 @@ variable "location" {
 variable "key" {
   type = string
 }
+
+variable "org_github_token" {
+  type = string
+}
