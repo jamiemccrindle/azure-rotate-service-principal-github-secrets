@@ -14,4 +14,18 @@ jobs:
         sudo apt-get update
         sudo apt-get install terraform=0.14.10
     - run: |
-        terraform --version
+        cd rotate
+        terraform init \
+          -backend-config="resource_group_name=${TFSTATE_RESOURCE_GROUP_NAME}" \
+          -backend-config="storage_account_name=${TFSTATE_STORAGE_ACCOUNT_NAME}" \
+          -backend-config="container_name=${TFSTATE_CONTAINER_NAME}" \
+          -backend-config="key=${TFSTATE_KEY}"
+      env:
+        TFSTATE_RESOURCE_GROUP_NAME: ${{ secrets.TFSTATE_RESOURCE_GROUP_NAME }}
+        TFSTATE_STORAGE_ACCOUNT_NAME: ${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME }}
+        TFSTATE_CONTAINER_NAME: ${{ secrets.TFSTATE_CONTAINER_NAME }}
+        TFSTATE_KEY: ${{ secrets.TFSTATE_KEY }}
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
