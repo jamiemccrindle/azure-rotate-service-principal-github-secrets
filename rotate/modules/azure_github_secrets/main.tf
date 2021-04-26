@@ -1,27 +1,3 @@
-variable "subscription_id" {
-  type = string
-}
-
-variable "tenant_id" {
-  type = string
-}
-
-variable "repository" {
-  type = string
-}
-
-variable "application_id" {
-  type = string
-}
-
-variable "application_object_id" {
-  type = string
-}
-
-variable "date" {
-  type = string
-}
-
 locals {
   date        = tonumber(var.date)
   odd_keeper  = floor((local.date + 1) / 2)
@@ -108,8 +84,4 @@ resource "github_actions_secret" "arm_tenant_id" {
   repository = var.repository
   secret_name = "ARM_TENANT_ID"
   plaintext_value = var.tenant_id
-}
-
-output "secret" {
-  value = github_actions_secret.terraform.plaintext_value
 }
