@@ -17,9 +17,9 @@ resource "azuread_service_principal" "terraform" {
   application_id = azuread_application.terraform.application_id
 }
 
-resource "azurerm_role_assignment" "contributor" {
+resource "azurerm_role_assignment" "owner" {
   scope                = data.azurerm_subscription.current.id
-  role_definition_name = "Contributor"
+  role_definition_name = "Owner"
   principal_id         = azuread_service_principal.terraform.object_id
 }
 
@@ -31,8 +31,4 @@ module "terraform_sp_secrets" {
   application_id        = azuread_application.terraform.application_id
   application_object_id = azuread_application.terraform.id
   date                  = var.date
-}
-
-output "secret" {
-  value = module.terraform_sp_secrets
 }
