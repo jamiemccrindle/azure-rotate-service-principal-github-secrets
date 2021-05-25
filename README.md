@@ -6,6 +6,6 @@ See this blog entry for more details [https://foldr.uk/rotating-azure-credential
 
 In this repo:
 
-* bootstrap - this bootstraps a storage account for the terraform state
+* bootstrap - this bootstraps an Azure Storage Account for the terraform state
 * rotate - the terraform that creates service principals, rotates their secrets and pushes them into GitHub
 * simplerotate - a simple example of safely rotating secrets using terraform
